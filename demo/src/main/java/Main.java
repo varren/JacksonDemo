@@ -1,6 +1,7 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 
@@ -39,7 +40,7 @@ public class Main {
         // mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
         // will remove {"name":...} part from json
         mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
-
+        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 
         try {
             // SIMPLE Test {"name": {"en": "foo", "jp": "bar"}}
