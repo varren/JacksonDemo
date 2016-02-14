@@ -1,21 +1,25 @@
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
-
+import java.util.Map;
+// Will need to set mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+// for your ObjectMapper to make @JsonRootName(value = "name") work
 @JsonRootName(value = "name")
-@JsonFormat(shape=JsonFormat.Shape.OBJECT)
-public class I18NProperty<T> extends ArrayList<I18NProperty.Content<T>>{
+
+//Need shape=JsonFormat.Shape.OBJECT to suppress default array deserialization behavior
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public class I18NProperty<T> extends ArrayList<I18NProperty.Content<T>> {
 
     public static class Content<T> {
         public Locale i18n;
         public T val;
+
         @Override
         public String toString() {
-            return "Locale: "+ i18n.toString() +" value: "+ String.valueOf(val);
+            return "Content(i18n=" + i18n.toString() + " val=" + String.valueOf(val) + ")";
         }
     }
 
@@ -27,19 +31,18 @@ public class I18NProperty<T> extends ArrayList<I18NProperty.Content<T>>{
         this.add(c);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder res = new StringBuilder();
-        res.append("[");
-        String delim = "";
-        for(I18NProperty.Content elem: this) {
-            res.append(delim);
-            delim = ", ";
-            res.append(String.valueOf(elem));
-
+    @JsonAnyGetter
+    public Map<String,T> getProperties() {
+        Map<String,T> result = new HashMap<String, T>();
+        for(Content<T> elem: this){
+            result.put(elem.i18n.getLanguage(), elem.val);
         }
-        res.append("]");
+        return result;
+    }
 
-        return res.toString();
+    @Override
+    @JsonIgnore
+    public boolean isEmpty() {
+        return super.isEmpty();
     }
 }

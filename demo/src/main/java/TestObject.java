@@ -3,33 +3,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestObject {
 
+    @JsonProperty("id")
     private int id;
+
+    @JsonProperty("title")
     private String title;
 
     @JsonCreator
-    public TestObject(@JsonProperty("id") int id, @JsonProperty("title") String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public TestObject() {
     }
 
     @Override
     public String toString() {
-        return "TestObject: (id: "+ id +" title: "+ title+")";
+        return "TestObject(id=" + id + ", title=" + title + ")";
     }
 }
